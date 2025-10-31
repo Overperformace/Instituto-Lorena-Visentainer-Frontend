@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 const LOCAL_API = "http://localhost:3000";
 const PROD_API = "https://instituto-lorena-visentainer-backend-h6x1.onrender.com";
 
+
 // Detecta se está em localhost ou produção
 export const API_URL =
   window.location.hostname === "localhost" ? LOCAL_API : PROD_API;
@@ -79,5 +80,7 @@ export async function deleteFile(path) {
 
 /* ☁️ SUPABASE (opcional — usado no filesapi.js) */
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
