@@ -1,37 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-const API = import.meta.env.VITE_API_URL;
-export default function App() {
-  const [users, setUsers] = useState([]);
-  const [name, setName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const load = async () => {
-    setLoading(true);
-    try {
-      const { data } = await axios.get(`${API}/users`);
-      setUsers(data || []);
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  };
-  const add = async () => {
-    if (!name) return;
-    await axios.post(`${API}/users`, { name });
-    setName('');
-    await load();
-  };
-  useEffect(() => { load(); }, []);
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Sidebar from "../components/sidebar";
+import Header from "../components/header";
+import Dashboard from "../pages/dashboard";
+import Patients from "../pages/patients";
+import Exams from "../pages/exams";
+import Reports from "../pages/reports";
+import Login from "../pages/login";
+import "../app.css";
+
+function ProtectedRoute({ children }) {
+  const isAuth = localStorage.getItem("auth") === "true";
+  return isAuth ? children : <Navigate to="/login" />;
+}
+
+function App() {
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Instituto Lorena Visentainer</h1>
-      <p>API: <code>{API}</code></p>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input value={name} onChange={e => setName(e.target.value)} placeholder="Nome do usuário" />
-        <button onClick={add}>Adicionar</button>
-      </div>
-      <h2>Usuários</h2>
-      {loading ? <p>Carregando...</p> : (
-        <ul>{users.map(u => <li key={u.id}>{u.name || u.username || JSON.stringify(u)}</li>)}</ul>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <div className="layout">
+                <Sidebar />
+                <div className="main-content">
+                  <Header />
+                  <div className="page-content">
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/patients" element={<Patients />} />
+                      <Route path="/exams" element={<Exams />} />
+                      <Route path="/reports" element={<Reports />} />
+                    </Routes>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
+
+export default App;
