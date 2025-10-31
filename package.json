@@ -3,12 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-  "prebuild": "chmod +x node_modules/.bin/vite",
+ "scripts": {
+  "prebuild": "chmod +x node_modules/.bin/vite || true",
   "dev": "vite",
-  "build": "vite build",
+  "build": "node --no-warnings ./node_modules/vite/bin/vite.js build",
   "preview": "vite preview"
-  },
+},
+
   "dependencies": {
     "@supabase/supabase-js": "^2.78.0",
     "axios": "^1.13.1",
