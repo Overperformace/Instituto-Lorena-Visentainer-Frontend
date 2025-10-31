@@ -69,3 +69,22 @@ export async function deleteFile(path) {
     method: "DELETE",
   });
 }
+
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+export const supabase = createClient(supabaseUrl, supabaseKey);
+
+import { supabase } from "./supabase";
+
+export async function getPatients() {
+  const { data, error } = await supabase.from("patients").select("*");
+  if (error) throw error;
+  return data;
+}
+
+export async function createPatient(formData) {
+  const { error } = await supabase.from("patients").insert([formData]);
+  if (error) throw error;
+}

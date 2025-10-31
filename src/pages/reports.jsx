@@ -1,3 +1,4 @@
+console.log("Carregando página: reports'");
 import React, { useEffect, useState } from "react";
 import { BarChart3 } from "lucide-react";
 

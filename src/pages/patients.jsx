@@ -1,3 +1,4 @@
+console.log("Carregando página: patients");
 import React, { useEffect, useState } from "react";
 import { getPatients, createPatient } from "../services/api";
 import jsPDF from "jspdf";

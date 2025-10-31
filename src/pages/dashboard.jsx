@@ -1,3 +1,4 @@
+console.log("Carregando página: dashboard");
 import React from "react";
 import Card from "../components/card";
 
