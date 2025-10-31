@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { listFiles, uploadFile, getSignedUrl, deleteFile } from '../services/filesapi';
-import { iconFor, isImage } from '../services/mimeIcon';
+import { iconFor, isImage } from '../services/mimelcon.js';
 import { Upload } from "lucide-react";
 
 export default function UploadPanel() {

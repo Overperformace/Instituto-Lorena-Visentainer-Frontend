@@ -2,10 +2,9 @@ import React from "react";
 import { User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { listFiles, uploadFile, getSignedUrl, deleteFile } from '../services/filesapi';
-import { iconFor, isImage } from '../services/mimeIcon';
-import { getFiles, deleteFile } from '../services/api';
+import { iconFor, isImage } from '../services/mimelcon.js';
+import { getFiles } from '../services/api';
 import { Upload, FileText, Image, X, FileSpreadsheet } from 'lucide-react';
-
 
 export default function Header(...args) {
     const navigate = useNavigate();

@@ -7,7 +7,7 @@ import Patients from "../pages/patients";
 import Exams from "../pages/exams";
 import Reports from "../pages/reports";
 import Login from "../pages/login";
-import "../app.css";
+
 
 function ProtectedRoute({ children }) {
   const isAuth = localStorage.getItem("auth") === "true";

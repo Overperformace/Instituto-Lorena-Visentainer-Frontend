@@ -1,11 +1,17 @@
-const VITE_API_URL = import.meta.env.VITE_API_URL || "https://instituto-lorena-visentainer-backend-h6x1.onrender.com";
+import { createClient } from "@supabase/supabase-js";
+
+// 🌍 URLs da API backend
 const LOCAL_API = "http://localhost:3000";
 const PROD_API = "https://instituto-lorena-visentainer-backend-h6x1.onrender.com";
 
+// Detecta se está em localhost ou produção
+export const API_URL =
+  window.location.hostname === "localhost" ? LOCAL_API : PROD_API;
 
-// Pacientes
+/* 🧬 PACIENTES (usando backend Express ou Node)*/
 export async function getPatients() {
   const response = await fetch(`${API_URL}/patients`);
+  if (!response.ok) throw new Error("Erro ao carregar pacientes");
   return await response.json();
 }
 
@@ -15,12 +21,14 @@ export async function createPatient(patientData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(patientData),
   });
+  if (!response.ok) throw new Error("Erro ao criar paciente");
   return await response.json();
 }
 
-// Exames
+/*🧪 EXAMES*/
 export async function getExams() {
   const response = await fetch(`${API_URL}/exams`);
+  if (!response.ok) throw new Error("Erro ao carregar exames");
   return await response.json();
 }
 
@@ -30,22 +38,18 @@ export async function createExam(examData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(examData),
   });
+  if (!response.ok) throw new Error("Erro ao criar exame");
   return await response.json();
 }
 
-// Usuários (opcional)
+/* 👤 USUÁRIOS (opcional)*/
 export async function getUsers() {
   const response = await fetch(`${API_URL}/users`);
+  if (!response.ok) throw new Error("Erro ao carregar usuários");
   return await response.json();
 }
-const AVITE_API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000"
-    : import.meta.env.VITE_API_URL;
 
-    export const API_URL =
-  window.location.hostname === "localhost" ? LOCAL_API : PROD_API;
-
+/* 💾 UPLOAD LOCAL (caso backend trate upload de arquivos)*/
 export async function uploadFile(file) {
   const formData = new FormData();
   formData.append("file", file);
@@ -61,30 +65,19 @@ export async function uploadFile(file) {
 
 export async function getFiles() {
   const response = await fetch(`${API_URL}/upload`);
+  if (!response.ok) throw new Error("Erro ao listar arquivos");
   return await response.json();
 }
 
 export async function deleteFile(path) {
-  await fetch(`${API_URL}/upload/${encodeURIComponent(path)}`, {
+  const response = await fetch(`${API_URL}/upload/${encodeURIComponent(path)}`, {
     method: "DELETE",
   });
+
+  if (!response.ok) throw new Error("Erro ao excluir arquivo");
 }
 
-import { createClient } from "@supabase/supabase-js";
-
+/* ☁️ SUPABASE (opcional — usado no filesapi.js) */
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 export const supabase = createClient(supabaseUrl, supabaseKey);
-
-import { supabase } from "./supabase";
-
-export async function getPatients() {
-  const { data, error } = await supabase.from("patients").select("*");
-  if (error) throw error;
-  return data;
-}
-
-export async function createPatient(formData) {
-  const { error } = await supabase.from("patients").insert([formData]);
-  if (error) throw error;
-}
