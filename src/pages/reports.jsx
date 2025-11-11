@@ -1,9 +1,11 @@
 console.log("Carregando página: reports'");
 import React, { useEffect, useState } from "react";
 import { BarChart3 } from "lucide-react";
+import { supabase } from "../services/supabase";
 
 export default function Reports() {
-  const [reports, setReports] = useState([]);
+    return (<div className="card"><h3>Relatórios</h3><p>Em breve: visão consolidada por cirurgião e status.</p></div>)
+    const [reports, setReports] = useState([]);
 
   useEffect(() => {
     // Exemplo: mock de dados

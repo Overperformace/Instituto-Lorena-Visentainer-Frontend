@@ -1,0 +1,10 @@
+Exame de Sangue - João Silva
+Data: 26/09/2025
+Prontuário: 001
+
+Resultados:
+Vitamina D: 45 ng/mL (Referência: 30-100)
+Vitamina B12: 650 pg/mL (Referência: 300-900)
+Ferritina: 45 ng/mL (Referência: 70-400)
+Hemoglobina: 16,2 g/dL (Referência: 12-16)
+TSH: 2,1 mUI/L (Referência: 0,4-4)

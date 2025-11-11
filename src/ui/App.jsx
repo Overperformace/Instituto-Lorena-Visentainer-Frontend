@@ -1,38 +1,56 @@
-import React from "react";
+// src/ui/App.jsx
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Sidebar from "../components/sidebar";
-import Header from "../components/header";
+import ProtectedRoute from "./ProtectedRoute";
+import Sidebar from "./sidebar";
+import Header from "./header";
 import Dashboard from "../pages/dashboard";
 import Patients from "../pages/patients";
 import Exams from "../pages/exams";
 import Reports from "../pages/reports";
 import Login from "../pages/login";
-
+import { getSession } from "../services/supabase";
 
 function ProtectedRoute({ children }) {
-  const isAuth = localStorage.getItem("auth") === "true";
-  return isAuth ? children : <Navigate to="/login" />;
+  const [checked, setChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const session = await getSession();
+      const auth = localStorage.getItem("auth") === "true";
+      setIsAuthenticated(session || auth);
+      setChecked(true);
+    };
+    verifyAuth();
+  }, []);
+
+  if (!checked) return null;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
-function App() {
+export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
+        {/* Rota padrão: redireciona para login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Página de login */}
         <Route path="/login" element={<Login />} />
+
+        {/* Rotas protegidas */}
         <Route
           path="/*"
           element={
             <ProtectedRoute>
               <div className="flex">
-                {/* Sidebar fixa */}
                 <Sidebar />
-
-                {/* Conteúdo principal */}
-                <div className="flex-1 ml-64 min-h-screen bg-gray-50 text-gray-800">
+                <div className="flex-1 ml-[230px] min-h-screen bg-slate-50">
                   <Header />
                   <main className="p-6">
                     <Routes>
-                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/patients" element={<Patients />} />
                       <Route path="/exams" element={<Exams />} />
                       <Route path="/reports" element={<Reports />} />
@@ -44,8 +62,6 @@ function App() {
           }
         />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
-
-export default App;

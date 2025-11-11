@@ -1,70 +1,74 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase, signInWithPassword } from "../services/supabase";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
+    try {
+      const { error } = await signInWithPassword(email, password);
+      if (error) throw error;
 
-    // Login de demonstração
-    if (username === "admin" && password === "admin123") {
+      // Salva login local
       localStorage.setItem("auth", "true");
-      navigate("/");
-    } else {
-      alert("Usuário ou senha incorretos");
+
+      // Marca admin
+      if (email === "admin@ilv.com") {
+        localStorage.setItem("admin", "true");
+      } else {
+        localStorage.removeItem("admin");
+      }
+
+      // Redireciona
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      alert("Erro ao fazer login: " + (err.message || ""));
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900 text-white">
-      <div className="bg-gray-800 bg-opacity-80 p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-[#1f49d6]">
+      <div className="bg-white/10 backdrop-blur-lg p-10 rounded-2xl shadow-2xl w-full max-w-md">
+        <h1 className="text-center text-white text-2xl font-bold mb-8">
           Instituto Lorena Visentainer
         </h1>
-        <h2 className="text-lg text-center mb-6 text-gray-300">
-          Sistema de Gestão Clínica
-        </h2>
-
-        <form onSubmit={handleLogin} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Usuário</label>
+            <label className="block text-white mb-1">E-mail</label>
             <input
-              type="text"
-              placeholder="Digite seu usuário"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-3 rounded-lg border border-white/20 bg-white/10 text-white"
             />
           </div>
-
           <div>
-            <label className="block text-sm font-medium mb-1">Senha</label>
+            <label className="block text-white mb-1">Senha</label>
             <input
               type="password"
-              placeholder="Digite sua senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              required
+              className="w-full p-3 rounded-lg border border-white/20 bg-white/10 text-white"
             />
           </div>
-
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-semibold transition-colors"
+            disabled={loading}
+            className="w-full bg-white text-[#1f49d6] font-semibold py-3 rounded-lg"
           >
-            Entrar
+            {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
-
-        <p className="text-center text-sm text-gray-400 mt-6">
-          Credenciais de demonstração:
-          <br />
-          <span className="font-semibold text-white">Usuário:</span> admin |
-          <span className="font-semibold text-white"> Senha:</span> admin123
-        </p>
       </div>
     </div>
   );

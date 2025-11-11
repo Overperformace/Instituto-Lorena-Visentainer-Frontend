@@ -1,8 +1,8 @@
 console.log("Carregando página: Exames");
 import React from "react";
 import UploadPanel from "../ui/UploadPanel";
-import "../ui/panel.css"; // garante o estilo moderno azul/branco
-
+import "../ui/panel.css"; 
+import { supabase } from "../services/supabase";
 export default function Exams() {
   return (
     <div className="exams-page">
